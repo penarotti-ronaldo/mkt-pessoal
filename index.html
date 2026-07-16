@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado - Marketing Pessoal e Institucional (PMPR)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: #1a3c6e;
+            border-bottom: 3px solid #1a3c6e;
+            padding-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #555;
+            margin: 10px 0 20px 0;
+            font-size: 16px;
+        }
+
+        .subtitle strong {
+            color: #1a3c6e;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #eef2f7;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stats-bar span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a3c6e;
+        }
+
+        .stats-bar .badge {
+            background: #1a3c6e;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .questao {
+            background: #f8faff;
+            border: 1px solid #dde4f0;
+            border-radius: 10px;
+            padding: 18px 20px 12px 20px;
+            margin: 16px 0;
+            transition: background 0.2s;
+        }
+
+        .questao.correta {
+            background: #e6f7e6;
+            border-color: #28a745;
+        }
+
+        .questao.errada {
+            background: #fde8e8;
+            border-color: #dc3545;
+        }
+
+        .questao .pergunta {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #1a2a4a;
+        }
+
+        .questao .tema {
+            display: inline-block;
+            font-size: 11px;
+            background: #1a3c6e;
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-weight: normal;
+        }
+
+        .questao .tipo {
+            display: inline-block;
+            font-size: 11px;
+            background: #6c757d;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-left: 6px;
+            font-weight: normal;
+        }
+
+        .questao .tipo.vf {
+            background: #17a2b8;
+        }
+
+        .questao .tipo.me {
+            background: #6f42c1;
+        }
+
+        .alternativas {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .alternativa {
+            background: #fff;
+            border: 2px solid #d0d7e6;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 15px;
+        }
+
+        .alternativa:hover:not(.bloqueado) {
+            background: #eaf0fa;
+            border-color: #1a3c6e;
+        }
+
+        .alternativa.correta {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .alternativa.errada {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .alternativa.bloqueado {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        .alternativa .feedback {
+            display: none;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .alternativa.correta .feedback {
+            display: inline;
+            color: #28a745;
+        }
+
+        .alternativa.errada .feedback {
+            display: inline;
+            color: #dc3545;
+        }
+
+        .alternativa .label {
+            font-weight: bold;
+            color: #555;
+            margin-right: 6px;
+        }
+
+        .resultado {
+            background: #1a3c6e;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            font-size: 18px;
+        }
+
+        .resultado .acertos {
+            background: #28a745;
+            padding: 6px 18px;
+            border-radius: 30px;
+        }
+
+        .resultado .erros {
+            background: #dc3545;
+            padding: 6px 18px;
+            border-radius: 30px;
+        }
+
+        .resultado .total {
+            background: #6c757d;
+            padding: 6px 18px;
+            border-radius: 30px;
+        }
+
+        .btn-reiniciar {
+            background: #ffc107;
+            color: #1a3c6e;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .btn-reiniciar:hover {
+            background: #e0a800;
+            transform: scale(1.02);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .legenda-temas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 15px 0 20px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legenda-temas span {
+            font-size: 12px;
+            background: #1a3c6e;
+            color: #fff;
+            padding: 3px 12px;
+            border-radius: 20px;
+        }
+
+        .progress-container {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 10px;
+            margin: 10px 0 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #28a745;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .resultado {
+                flex-direction: column;
+                gap: 8px;
+                font-size: 16px;
+            }
+            .alternativa {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .legenda-temas span {
+                font-size: 10px;
+                padding: 2px 8px;
+            }
+            .stats-bar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <h1>📝 SIMULADO - MARKETING PESSOAL</h1>
+        <p class="subtitle"><strong>Curso de Formação de Praças PMPR - 2026</strong></p>
+        <p class="subtitle">35 questões: 20 V/F + 15 Múltipla Escolha • Fundamentos, Etiqueta, Marketing Digital e Imagem Institucional</p>
+
+        <div class="legenda-temas">
+            <span>📌 Fundamentos</span>
+            <span>🏛️ Institucional</span>
+            <span>🗺️ Etiqueta</span>
+            <span>⚖️ Valores</span>
+            <span>📋 Comunicação</span>
+            <span>📊 Marketing Digital</span>
+            <span>👮 Conduta</span>
+            <span>📜 Diretrizes PMPR</span>
+        </div>
+
+        <div class="stats-bar">
+            <span>📊 Progresso: <span id="progresso-texto">0/35</span></span>
+            <span>✅ Acertos: <span id="acertos-parcial">0</span></span>
+            <span>❌ Erros: <span id="erros-parcial">0</span></span>
+            <span class="badge">🎯 Respondidas: <span id="respondidas-parcial">0</span></span>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div id="questoes-container"></div>
+
+        <div class="resultado" id="resultado">
+            <span>✅ <span class="acertos" id="acertos">0</span> ACERTOS</span>
+            <span>❌ <span class="erros" id="erros">0</span> ERROS</span>
+            <span>📊 <span class="total" id="total">0</span> RESPONDIDAS</span>
+        </div>
+
+        <div class="text-center">
+            <button class="btn-reiniciar" onclick="reiniciar()">🔄 REINICIAR SIMULADO</button>
+        </div>
+
+    </div>
+
+    <script>
+        // ================================================================
+        //  DADOS DAS 35 QUESTÕES - MARKETING PESSOAL E INSTITUCIONAL PMPR
+        //  20 V/F + 15 Múltipla Escolha
+        // ================================================================
+        var questoesData = [
+            // ========== V/F 1-5: FUNDAMENTOS ==========
+            {
+                id: 1,
+                tema: "Fundamentos",
+                pergunta: "O marketing pessoal, segundo Bordin, envolve autoconhecimento, definição de objetivos e planejamento como etapas iniciais.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 2,
+                tema: "Fundamentos",
+                pergunta: "Para Kotler e Armstrong, o marketing se resume apenas à promoção de produtos e não envolve criação de valor.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+            {
+                id: 3,
+                tema: "Fundamentos",
+                pergunta: "No contexto da PMPR, o 'Produto' nos 4Ps do marketing refere-se às competências, valores e atitudes do militar.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 4,
+                tema: "Fundamentos",
+                pergunta: "A 'Praça' nos 4Ps do marketing pessoal na PMPR diz respeito à comunicação da imagem do militar.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+            {
+                id: 5,
+                tema: "Fundamentos",
+                pergunta: "Segundo Rizzo, o marketing pessoal surge como estratégia e não como mera aparência.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+
+            // ========== V/F 6-10: INSTITUCIONAL E VALORES ==========
+            {
+                id: 6,
+                tema: "Institucional",
+                pergunta: "O marketing institucional foca na construção da imagem organizacional, incluindo missão, visão e valores da PMPR.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 7,
+                tema: "Institucional",
+                pergunta: "A conduta individual do policial militar não afeta a imagem institucional da PMPR, pois são esferas separadas.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+            {
+                id: 8,
+                tema: "Institucional",
+                pergunta: "A visão estratégica da PMPR para 2025-2027 é ser uma instituição policial moderna, inovadora e que inspira confiança.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 9,
+                tema: "Valores",
+                pergunta: "A individualidade e o estilo pessoal são valores compartilhados entre marketing pessoal e institucional.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+            {
+                id: 10,
+                tema: "Valores",
+                pergunta: "A preservação da imagem institucional é um dever funcional de todo integrante da PMPR.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+
+            // ========== V/F 11-15: ETIQUETA E COMUNICAÇÃO ==========
+            {
+                id: 11,
+                tema: "Etiqueta",
+                pergunta: "A etiqueta social, segundo Silveira, é um conjunto de normas que promovem harmonia e respeito nas interações sociais.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 12,
+                tema: "Etiqueta",
+                pergunta: "A linguagem não-verbal representa a menor parte da mensagem percebida pelo cidadão durante uma interação.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+            {
+                id: 13,
+                tema: "Comunicação",
+                pergunta: "Todo policial militar é um agente de comunicação social, devendo zelar pela imagem da PMPR.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 14,
+                tema: "Comunicação",
+                pergunta: "O militar pode participar de podcasts ou entrevistas sem autorização, desde que não mencione a corporação.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+            {
+                id: 15,
+                tema: "Etiqueta",
+                pergunta: "Uma postura corporal inadequada pode transmitir ao cidadão insegurança, desinteresse ou despreparo.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+
+            // ========== V/F 16-20: MARKETING DIGITAL E CONDUTA ==========
+            {
+                id: 16,
+                tema: "Marketing Digital",
+                pergunta: "Segundo a Portaria CG nº 1220/2022, é vedado ao militar divulgar informações sigilosas ou que mereçam sigilo profissional.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 17,
+                tema: "Marketing Digital",
+                pergunta: "O militar pode utilizar símbolos institucionais em perfis pessoais para promoção de produtos, desde que não seja durante o serviço.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+            {
+                id: 18,
+                tema: "Marketing Digital",
+                pergunta: "De acordo com o Memorando nº 0049/2025, é proibida a marcação de perfis particulares em postagens institucionais oficiais.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 19,
+                tema: "Conduta",
+                pergunta: "O policial militar, mesmo fora de serviço, continua associado à imagem da corporação perante a sociedade.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 0,
+                isVF: true
+            },
+            {
+                id: 20,
+                tema: "Conduta",
+                pergunta: "A criticar publicamente ato de superior hierárquico é uma conduta permitida, desde que feita com respeito.",
+                alternativas: ["Verdadeiro", "Falso"],
+                correta: 1,
+                isVF: true
+            },
+
+            // ========== M.E. 21-25: FUNDAMENTOS E INSTITUCIONAL ==========
+            {
+                id: 21,
+                tema: "Fundamentos",
+                pergunta: "Qual das alternativas NÃO é uma etapa da construção da imagem pessoal segundo Bordin?",
+                alternativas: [
+                    "Autoconhecimento.",
+                    "Planejamento.",
+                    "Aparência.",
+                    "Competição com colegas.",
+                    "Credibilidade."
+                ],
+                correta: 3
+            },
+            {
+                id: 22,
+                tema: "Fundamentos",
+                pergunta: "No contexto da PMPR, o que representa o 'Preço' nos 4Ps do marketing pessoal?",
+                alternativas: [
+                    "O salário do militar.",
+                    "A percepção de valor, credibilidade e confiança que a sociedade deposita no profissional.",
+                    "O custo do equipamento utilizado.",
+                    "A mensalidade do curso de formação.",
+                    "O valor da indenização por danos."
+                ],
+                correta: 1
+            },
+            {
+                id: 23,
+                tema: "Institucional",
+                pergunta: "Qual é a missão da PMPR, conforme o mapa estratégico 2025-2027?",
+                alternativas: [
+                    "Proteger vidas, fazer cumprir a lei, prevenir e combater o crime, promovendo a ordem e a segurança.",
+                    "Ser uma instituição policial moderna e inovadora.",
+                    "Fortalecer a segurança e a sensação de segurança.",
+                    "Valorizar o efetivo e promover a manutenção de sua saúde.",
+                    "Aumentar a captação de recursos."
+                ],
+                correta: 0
+            },
+            {
+                id: 24,
+                tema: "Institucional",
+                pergunta: "Qual dos seguintes é um objetivo estratégico da PMPR relacionado ao marketing institucional?",
+                alternativas: [
+                    "Aumentar o número de viaturas.",
+                    "Fortalecer a imagem institucional como uma força confiável, ética e profissional.",
+                    "Reduzir o efetivo policial.",
+                    "Eliminar a comunicação com a comunidade.",
+                    "Privatizar os serviços de segurança."
+                ],
+                correta: 1
+            },
+            {
+                id: 25,
+                tema: "Valores",
+                pergunta: "São valores compartilhados entre marketing pessoal e institucional, EXCETO:",
+                alternativas: [
+                    "Postura ética.",
+                    "Disciplina.",
+                    "Respeito.",
+                    "Individualismo.",
+                    "Credibilidade."
+                ],
+                correta: 3
+            },
+
+            // ========== M.E. 26-30: ETIQUETA E COMUNICAÇÃO ==========
+            {
+                id: 26,
+                tema: "Etiqueta",
+                pergunta: "Qual dos seguintes NÃO é um pilar da inteligência social mencionado no material?",
+                alternativas: [
+                    "Empatia e respeito às diferenças.",
+                    "Bom senso e adequação ao ambiente.",
+                    "Resiliência e controle emocional.",
+                    "Competição e superioridade.",
+                    "Comunicação eficaz."
+                ],
+                correta: 3
+            },
+            {
+                id: 27,
+                tema: "Etiqueta",
+                pergunta: "Segundo Cortez, a imagem pessoal é:",
+                alternativas: [
+                    "Um ativo estratégico que influencia a percepção de competência e confiabilidade.",
+                    "Apenas a aparência física do profissional.",
+                    "Irrelevante para a carreira militar.",
+                    "Determinada exclusivamente pelo uniforme.",
+                    "Uma questão de sorte."
+                ],
+                correta: 0
+            },
+            {
+                id: 28,
+                tema: "Comunicação",
+                pergunta: "Em entrevistas, o policial militar deve:",
+                alternativas: [
+                    "Expressar opiniões pessoais livremente.",
+                    "Manter autocontrole, abster-se de opiniões pessoais e conhecer bem o assunto.",
+                    "Criticar a corporação para parecer imparcial.",
+                    "Falar apenas sobre sua vida pessoal.",
+                    "Evitar responder perguntas."
+                ],
+                correta: 1
+            },
+            {
+                id: 29,
+                tema: "Comunicação",
+                pergunta: "O Manual de Comunicação Social da PMPR orienta sobre:",
+                alternativas: [
+                    "Apenas o uso do uniforme.",
+                    "Postura, linguagem e conduta do policial militar.",
+                    "Como realizar operações policiais.",
+                    "Apenas a comunicação digital.",
+                    "Apenas a cerimonial militar."
+                ],
+                correta: 1
+            },
+            {
+                id: 30,
+                tema: "Etiqueta",
+                pergunta: "A etiqueta no contexto militar atua como instrumento estratégico para:",
+                alternativas: [
+                    "Padronizar comportamentos e reforçar a hierarquia.",
+                    "Promover a desordem.",
+                    "Eliminar a disciplina.",
+                    "Incentivar a individualidade.",
+                    "Reduzir a eficiência organizacional."
+                ],
+                correta: 0
+            },
+
+            // ========== M.E. 31-35: MARKETING DIGITAL E CONDUTA ==========
+            {
+                id: 31,
+                tema: "Marketing Digital",
+                pergunta: "Qual conduta é vedada ao militar estadual no uso de mídias sociais, segundo a Portaria CG nº 1220/2022?",
+                alternativas: [
+                    "Publicar fotos de sua família.",
+                    "Divulgar informações sigilosas ou que mereçam sigilo profissional.",
+                    "Compartilhar notícias positivas sobre a PMPR.",
+                    "Postar sobre eventos de treinamento autorizados.",
+                    "Elogiar colegas de trabalho."
+                ],
+                correta: 1
+            },
+            {
+                id: 32,
+                tema: "Marketing Digital",
+                pergunta: "O uso inadequado de redes sociais pelo policial militar pode ensejar responsabilização disciplinar, incluindo:",
+                alternativas: [
+                    "Apenas advertência verbal.",
+                    "Advertência, repreensão, detenção ou exclusão em casos graves.",
+                    "Apenas multa.",
+                    "Apenas suspensão do serviço.",
+                    "Nenhuma sanção."
+                ],
+                correta: 1
+            },
+            {
+                id: 33,
+                tema: "Conduta",
+                pergunta: "O que significa a afirmação: 'Sua imagem é o maior patrimônio da nossa instituição. Preserve-a com honra.'?",
+                alternativas: [
+                    "A imagem pessoal do militar é irrelevante para a instituição.",
+                    "A conduta individual do militar reflete diretamente na credibilidade da PMPR.",
+                    "Apenas os oficiais precisam preservar a imagem institucional.",
+                    "A imagem da PMPR depende exclusivamente da mídia.",
+                    "Os policiais podem agir como quiserem fora do serviço."
+                ],
+                correta: 1
+            },
+            {
+                id: 34,
+                tema: "Conduta",
+                pergunta: "Segundo as diretrizes de comunicação da PMPR, o militar deve evitar:",
+                alternativas: [
+                    "Publicar conteúdos que violem os preceitos de hierarquia e disciplina.",
+                    "Participar de eventos comunitários.",
+                    "Usar o uniforme corretamente.",
+                    "Atender ocorrências com profissionalismo.",
+                    "Cumprir ordens superiores."
+                ],
+                correta: 0
+            },
+            {
+                id: 35,
+                tema: "Marketing Digital",
+                pergunta: "De acordo com o Memorando nº 0049/2025, fica terminantemente proibida:",
+                alternativas: [
+                    "A marcação de perfis particulares em postagens institucionais oficiais.",
+                    "A divulgação de informações sobre operações autorizadas.",
+                    "A participação em treinamentos.",
+                    "A comunicação com a imprensa mediante autorização.",
+                    "A postagem de fotos do fardamento em contextos adequados."
+                ],
+                correta: 0
+            }
+        ];
+
+        // ================================================================
+        //  ESTADO DA APLICAÇÃO
+        // ================================================================
+        var estado = {
+            respondidas: 0,
+            acertos: 0,
+            erros: 0,
+            bloqueadas: {}
+        };
+
+        var letras = ["A", "B", "C", "D", "E"];
+
+        // ================================================================
+        //  RENDERIZAR QUESTÕES
+        // ================================================================
+        function renderizarQuestoes() {
+            var container = document.getElementById("questoes-container");
+            container.innerHTML = "";
+
+            for (var q = 0; q < questoesData.length; q++) {
+                var questao = questoesData[q];
+                
+                var divQuestao = document.createElement("div");
+                divQuestao.className = "questao";
+                divQuestao.id = "questao-" + questao.id;
+
+                var pergunta = document.createElement("div");
+                pergunta.className = "pergunta";
+                
+                var tipoTexto = questao.isVF ? "V/F" : "M.E.";
+                var tipoClass = questao.isVF ? "vf" : "me";
+                pergunta.innerHTML = questao.id + ". " + questao.pergunta + 
+                    ' <span class="tema">' + questao.tema + '</span>' +
+                    ' <span class="tipo ' + tipoClass + '">' + tipoTexto + '</span>';
+                divQuestao.appendChild(pergunta);
+
+                var divAlt = document.createElement("div");
+                divAlt.className = "alternativas";
+
+                for (var i = 0; i < questao.alternativas.length; i++) {
+                    var alt = document.createElement("div");
+                    alt.className = "alternativa";
+                    alt.dataset.indice = i;
+                    alt.dataset.questaoId = questao.id;
+                    alt.id = "alt-" + questao.id + "-" + i;
+
+                    var label = document.createElement("span");
+                    label.className = "label";
+                    
+                    if (questao.isVF) {
+                        label.textContent = i === 0 ? "V)" : "F)";
+                    } else {
+                        label.textContent = letras[i] + ")";
+                    }
+                    
+                    alt.appendChild(label);
+
+                    var txt = document.createTextNode(" " + questao.alternativas[i]);
+                    alt.appendChild(txt);
+
+                    var feedback = document.createElement("span");
+                    feedback.className = "feedback";
+                    feedback.textContent = " ✓";
+                    alt.appendChild(feedback);
+
+                    alt.addEventListener("click", function(e) {
+                        var target = e.currentTarget;
+                        var questaoId = parseInt(target.dataset.questaoId);
+                        var indice = parseInt(target.dataset.indice);
+                        responderQuestao(questaoId, indice);
+                    });
+
+                    divAlt.appendChild(alt);
+                }
+
+                divQuestao.appendChild(divAlt);
+                container.appendChild(divQuestao);
+            }
+
+            atualizarResultado();
+        }
+
+        // ================================================================
+        //  RESPONDER QUESTÃO
+        // ================================================================
+        function responderQuestao(questaoId, indiceSelecionado) {
+            if (estado.bloqueadas[questaoId]) {
+                return;
+            }
+
+            var questao = null;
+            for (var q = 0; q < questoesData.length; q++) {
+                if (questoesData[q].id === questaoId) {
+                    questao = questoesData[q];
+                    break;
+                }
+            }
+            
+            if (!questao) return;
+
+            var isCorreta = (indiceSelecionado === questao.correta);
+
+            estado.bloqueadas[questaoId] = true;
+            estado.respondidas++;
+
+            if (isCorreta) {
+                estado.acertos++;
+            } else {
+                estado.erros++;
+            }
+
+            var divQuestao = document.getElementById("questao-" + questaoId);
+            if (isCorreta) {
+                divQuestao.className = "questao correta";
+            } else {
+                divQuestao.className = "questao errada";
+            }
+
+            var alternativas = divQuestao.querySelectorAll(".alternativa");
+            for (var i = 0; i < alternativas.length; i++) {
+                alternativas[i].classList.add("bloqueado");
+                if (i === questao.correta) {
+                    alternativas[i].classList.add("correta");
+                } else if (i === indiceSelecionado && !isCorreta) {
+                    alternativas[i].classList.add("errada");
+                }
+                alternativas[i].classList.remove("selecionada");
+            }
+
+            atualizarResultado();
+        }
+
+        // ================================================================
+        //  ATUALIZAR RESULTADO
+        // ================================================================
+        function atualizarResultado() {
+            document.getElementById("acertos").textContent = estado.acertos;
+            document.getElementById("erros").textContent = estado.erros;
+            document.getElementById("total").textContent = estado.respondidas;
+            
+            document.getElementById("acertos-parcial").textContent = estado.acertos;
+            document.getElementById("erros-parcial").textContent = estado.erros;
+            document.getElementById("respondidas-parcial").textContent = estado.respondidas;
+            document.getElementById("progresso-texto").textContent = estado.respondidas + "/" + questoesData.length;
+            
+            var total = questoesData.length;
+            var progresso = (estado.respondidas / total) * 100;
+            document.getElementById("progress-bar").style.width = progresso + "%";
+        }
+
+        // ================================================================
+        //  REINICIAR
+        // ================================================================
+        function reiniciar() {
+            estado = {
+                respondidas: 0,
+                acertos: 0,
+                erros: 0,
+                bloqueadas: {}
+            };
+            renderizarQuestoes();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // ================================================================
+        //  INICIALIZAR
+        // ================================================================
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", renderizarQuestoes);
+        } else {
+            renderizarQuestoes();
+        }
+    </script>
+</body>
+</html>
